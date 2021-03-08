@@ -2,41 +2,42 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Hangman {
-     private ArrayList<User> users = new ArrayList<User>();
-     private int tries = 0;
-     private String line;
-     private ArrayList<String> words = new ArrayList<String>();
-     private String word = "";
-     private boolean isAnswered = false; // In development
-     Scanner scanner = new Scanner(System.in);
 
-     public void generateRandomWord() {
-         words.add("Catastrophe");
-         words.add("Bespectacled");
-         words.add("AP Computer Science A");
-         words.add("AP Calculus BC");
-         words.add("Prospect High School");
+    private ArrayList<User> users = new ArrayList<User>();
+    private int tries = 0;
+    private String line;
+    private ArrayList<String> words = new ArrayList<String>();
+    private String word = "";
+    private boolean isAnswered = false; // In development
+    Scanner scanner = new Scanner(System.in);
 
-         int index = (int) (Math.random()*words.size());
-         word = words.get(index);
+    public void generateRandomWord() {
+        words.add("Catastrophe");
+        words.add("Bespectacled");
+        words.add("AP Computer Science A");
+        words.add("AP Calculus BC");
+        words.add("Prospect High School");
+
+        int index = (int) (Math.random()*words.size());
+        word = words.get(index);
 
      }
 
     public void revealAnswer(String word) {
-         System.out.println("The word was " + word + "!\n");
+        System.out.println("The word was " + word + "!\n");
     }
 
     public void checkNumChars(String word) {
-         line = "";
-         for (int i = 0; i < word.length(); i++) {
-             if (word.substring(i, i+1).equals(" ")) {
-                 line += " ";
-             }
-             else {
-                 line += "_";
-             }
-         }
-         System.out.println(line);
+        line = "";
+        for (int i = 0; i < word.length(); i++) {
+            if (word.substring(i, i+1).equals(" ")) {
+                line += " ";
+            }
+            else {
+                line += "_";
+            }
+        }
+        System.out.println(line);
     }
 
     public void setGuess() {
@@ -86,25 +87,25 @@ public class Hangman {
     }
 
     public void giveHint(String word) {
-         if (word.equals("Catastrophe")) {
-             System.out.println("That's a lot of damage!");
-         }
-         else if (word.equals("Bespectacled")) {
-             System.out.println("An adjective that describes a useful tool that is carried on a person.");
-         }
-         else if (word.equals("AP Computer Science A")) {
-             System.out.println("A class that emphasizes on algorithms.");
-         }
-         else if (word.equals("AP Calculus BC")) {
-             System.out.println("The highest level of math you can reach in high school.");
-         }
-         else if (word.equals("Prospect High School")) {
-             System.out.println("A school in Saratoga, California that has colors gold and blue.");
-         }
+        if (word.equals("Catastrophe")) {
+            System.out.println("That's a lot of damage!");
+        }
+        else if (word.equals("Bespectacled")) {
+            System.out.println("An adjective that describes a useful tool that is carried on a person.");
+        }
+        else if (word.equals("AP Computer Science A")) {
+            System.out.println("A class that emphasizes on algorithms.");
+        }
+        else if (word.equals("AP Calculus BC")) {
+            System.out.println("The highest level of math you can reach in high school.");
+        }
+        else if (word.equals("Prospect High School")) {
+            System.out.println("A school in Saratoga, California that has colors gold and blue.");
+        }
     }
 
     public void giveFunFact(String word) {
-         System.out.print("Fun fact: ");
+        System.out.print("Fun fact: ");
         if (word.equals("Catastrophe")) {
             System.out.println("COVID-19 is Catastrophic!\n");
         }
