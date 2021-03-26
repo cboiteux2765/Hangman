@@ -7,8 +7,11 @@ public class Hangman {
     private int tries = 0;
     private String line;
     private ArrayList<String> words = new ArrayList<String>();
+    private ArrayList<Integer> indices = new ArrayList<Integer>();
     private String word = "";
     private boolean isAnswered = false; // In development
+    private String newWord = "";
+    private int counter = 0;
     Scanner scanner = new Scanner(System.in);
 
     public void generateRandomWord() {
@@ -21,7 +24,7 @@ public class Hangman {
         int index = (int) (Math.random()*words.size());
         word = words.get(index);
 
-     }
+    }
 
     public void revealAnswer(String word) {
         System.out.println("The word was " + word + "!\n");
@@ -48,16 +51,26 @@ public class Hangman {
         System.out.println("\nGuess a letter of the word: ");
         checkNumChars(word);
         String letter = "";
-        String newWord = "";
         letter = scanner.next();
-        for (int i = 0; i < word.length(); i++) {
-            if (letter.equals(word.substring(i, i + 1))) {
-                System.out.println(i + " "); // Test
-                newWord = word.substring(0, i) + letter + word.substring(i + 1);
-                tries++;
-                System.out.println(newWord);
+        int index = 0;
+        indices.add(0);
+        for (index = 0; index < word.length(); index++) {
+            if (letter.equalsIgnoreCase(word.substring(index, index + 1))) {
+                System.out.print(index + " "); // Test
+                indices.add(counter, index);
+                counter++;
             }
         }
+
+        for (int i = 0; i < indices.size(); i++) {
+            System.out.println("Index check");
+            System.out.println(indices.get(i));
+        }
+        
+        for (int i = 0; i < indices.size()-1; i++) {
+            newWord += word.substring(indices.get(i), indices.get(i+1));
+        }
+        System.out.println(newWord);
 
         if (letter.equalsIgnoreCase("quit")) {
             System.out.println("Game Over!");
@@ -196,7 +209,7 @@ public class Hangman {
             System.out.println("Invalid option. Enter again.");
             showMenu();
         }
-}
+    }
 
 
     public void endMenu() {
