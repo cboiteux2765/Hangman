@@ -50,11 +50,9 @@ public class Hangman {
         System.out.println("giveup - Reveals the answer");
         System.out.println("\nGuess a letter of the word: ");
         checkNumChars(word);
-        String letter = "";
-        letter = scanner.next();
-        int index = 0;
-        indices.add(0);
-        for (index = 0; index < word.length(); index++) {
+        String letter = scanner.next();
+        indices.add(0); // Fix this! Conflicts if 1st letter is guessed
+        for (int index = 0; index < word.length(); index++) {
             if (letter.equalsIgnoreCase(word.substring(index, index + 1))) {
                 System.out.print(index + " "); // Test
                 indices.add(counter, index);
