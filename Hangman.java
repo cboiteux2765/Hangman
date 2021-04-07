@@ -26,6 +26,43 @@ public class Hangman {
 
     }
 
+    public void addWord() {
+        String w = scanner.nextLine();
+        if (checkDuplicate(w)) {
+            System.out.println("This word already exists.");
+        }
+        else {
+            words.add(w);
+            System.out.println("Added to words list.");
+        }
+    }
+
+    public boolean checkDuplicate(String w) {
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).equals(w)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeWord() {
+        boolean isRemoved = false;
+        System.out.println("Type in the word you would like to remove:");
+        String w = scanner.nextLine();
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).equals(w)) {
+                words.remove(i);
+                isRemoved = true;
+                System.out.println(w + " has been removed from the words list!");
+                i--;
+            }
+        }
+        if (!isRemoved) {
+            System.out.println(w + " was not in the words list.");
+        }
+    }
+
     public void revealAnswer(String word) {
         System.out.println("The word was " + word + "!\n");
     }
@@ -161,15 +198,26 @@ public class Hangman {
     public void aboutMe() {
         System.out.println("Hi! I am Clement Boiteux. I am currently a sophomore in high school. My most favorite subject is math, but I also enjoy any subject that uses a lot of math. I plan to pursue engineering, programming, or finance/economics in the future.");
         System.out.println("Programming Experience: I took AP Computer Science A in my sophomore year of high school and joined Programming Club. I participated in two hackathons so far and programmed in HTML/CSS for both. I actively program in Java and HTML/CSS. I have a little bit of experience with JavaScript, Python, and C++ but don't actively program in these languages.\n");
-        System.out.println("Type and enter any key to return to the main menu.");
-        scanner.next();
-        showMenu();
+        redirect();
     }
 
     public void showCredits() {
         System.out.println("Developed by: Clement Boiteux in 2021");
         System.out.println("Language: Java");
-        System.out.println("Inspired by Hangman\n");
+        System.out.println("Inspired by Hangman");
+        redirect();
+    }
+
+    public void tutorial() {
+        System.out.println("Hangman is a game where a player comes up with a secret word or phrase and another player has to guess it.");
+        System.out.println("The guessing player can only guess one letter at a time, and if the word/phrase contains the letter, the correctly guessed letters are filled in, thus revealing the word more.");
+        System.out.println("However, if the player guesses a letter wrong, a part of the hangman is drawn. The more it is drawn, the less chances a player has. Wrong letters are noted down.");
+        System.out.println("If the player has lost all their chances and guessed a letter wrong, they lose and thus the word is revealed.");
+        System.out.println("However, if a player believes there are enough letters in the word/phrase that can be guessed, they can go for it, but a wrong guess will not cost the player anything.");
+        redirect();
+    }
+
+    public void redirect() {
         System.out.println("Type and enter any key to return main menu.");
         scanner.next();
         showMenu();
@@ -192,7 +240,7 @@ public class Hangman {
             showCredits();
         }
         else if (choice == 3) {
-            // In development
+            tutorial();
         }
         else if (choice == 4) {
             aboutMe();
