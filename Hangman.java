@@ -82,13 +82,24 @@ public class Hangman {
 
     public void setGuess() {
         System.out.println("Commands:");
-        System.out.println("quit - Quits the game");
-        System.out.println("help/hint - Gives a hint");
-        System.out.println("giveup - Reveals the answer");
-        System.out.println("\nGuess a letter of the word: ");
+        System.out.println("1 - Quits the game");
+        System.out.println("2 - Gives a hint");
+        System.out.println("3 - Reveals the answer");
+        System.out.println("Guess a letter of the word: ");
         checkNumChars(word);
         String letter = scanner.next();
-        indices.add(0); // Fix this! Conflicts if 1st letter is guessed
+        if (letter.equalsIgnoreCase("1")) {
+            System.out.println("Game Over!");
+        } // In development
+        if (letter.equalsIgnoreCase("2")) {
+            giveHint(word);
+            setGuess();
+        }
+        if (letter.equalsIgnoreCase("3")) {
+            revealAnswer(word);
+            giveFunFact(word);
+            endMenu();
+        }
         for (int index = 0; index < word.length(); index++) {
             if (letter.equalsIgnoreCase(word.substring(index, index + 1))) {
                 System.out.print(index + " "); // Test
@@ -106,18 +117,7 @@ public class Hangman {
             newWord += word.substring(indices.get(i), indices.get(i+1));
         }
         System.out.println(newWord);
-
-        if (letter.equalsIgnoreCase("quit")) {
-            System.out.println("Game Over!");
-        } // In development
-        if (letter.equalsIgnoreCase("help") || letter.equalsIgnoreCase("hint")) {
-            giveHint(word);
-            scanner.next();
-        }
-        if (letter.equalsIgnoreCase("giveup")) {
-            revealAnswer(word);
-            giveFunFact(word); // Try to make "giveup" two words "give up", but generates a new word
-        }
+        setGuess();
     }
 
     public void resetHighScores() {
@@ -259,7 +259,7 @@ public class Hangman {
 
 
     public void endMenu() {
-        System.out.println("Good job! You have solved the code! Would you like to: ");
+        System.out.println("Good job! You have discovered the secret word! Would you like to: ");
         System.out.println("1. Be featured on the high scores list");
         System.out.println("2. Play again");
         System.out.println("3. Quit game");
