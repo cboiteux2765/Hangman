@@ -6,7 +6,7 @@ public class Hangman {
     private ArrayList<User> users = new ArrayList<User>();
     private int tries = 0;
     private String line;
-    private ArrayList<String> words = new ArrayList<String>();
+    private ArrayList<Word> words = new ArrayList<Word>();
     private ArrayList<Integer> indices = new ArrayList<Integer>();
     private String word = "";
     private boolean isAnswered = false; // In development
@@ -15,31 +15,37 @@ public class Hangman {
     Scanner scanner = new Scanner(System.in);
 
     public void generateRandomWord() {
-        words.add("Catastrophe");
-        words.add("Bespectacled");
-        words.add("AP Computer Science A");
-        words.add("AP Calculus BC");
-        words.add("Prospect High School");
+        words.add(new Word("Catastrophe", "That's a lot of damage!", "COVID-19 is Catastrophic!"));
+        words.add(new Word("Bespectacled", "An adjective that describes a useful tool that is carried on a person.", "If you have glasses, you are bespectacled!"));
+        words.add(new Word("AP Computer Science A", "A class that emphasizes on algorithms", "AP Computer Science A is one of the easiest APs in all of College Board. If you like computers and are good at math, take it when you can!"));
+        words.add(new Word("AP Calculus BC", "The highest level of math you can reach in high school.", "The next level of math after AP Calculus BC is Multivariable Calculus!"));
+        words.add(new Word("Prospect High School", "A school in Saratoga, California that has colors gold and blue.", "PHS has a very diverse community!"));
 
         int index = (int) (Math.random()*words.size());
-        word = words.get(index);
+        word = words.get(index).getWord();
 
     }
 
     public void addWord() {
+        System.out.println("Type in a word to add:");
         String w = scanner.nextLine();
-        if (checkDuplicate(w)) {
+        System.out.println("Type in a simple description that does not give it away:");
+        String d = scanner.nextLine();
+        System.out.println("Type in a fun fact about it:");
+        String f = scanner.nextLine();
+
+        if (checkDuplicate(new Word(w, d, f))) {
             System.out.println("This word already exists.");
         }
         else {
-            words.add(w);
-            System.out.println("Added to words list.");
+            words.add(new Word(w, d, f));
+            System.out.println("Added to words list!");
         }
     }
 
-    public boolean checkDuplicate(String w) {
+    public boolean checkDuplicate(Word w) {
         for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).equals(w)) {
+            if (words.get(i).getWord().equals(w)) {
                 return true;
             }
         }
@@ -51,7 +57,7 @@ public class Hangman {
         System.out.println("Type in the word you would like to remove:");
         String w = scanner.nextLine();
         for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).equals(w)) {
+            if (words.get(i).getWord().equals(w)) {
                 words.remove(i);
                 isRemoved = true;
                 System.out.println(w + " has been removed from the words list!");
@@ -130,44 +136,36 @@ public class Hangman {
     }
 
     public void startGame() {
+        System.out.println("Would you like to put your own words or use existing ones?");
+        System.out.println("1. Your own words");
+        System.out.println("2. Use existing ones");
+        int s = scanner.nextInt();
+        switch(s) {
+            case 1:
+                for (int i = 0; i < 4; i++) {
+                    
+                } 
+        }
+
         generateRandomWord();
         setGuess();
     }
 
     public void giveHint(String word) {
-        if (word.equals("Catastrophe")) {
-            System.out.println("That's a lot of damage!");
-        }
-        else if (word.equals("Bespectacled")) {
-            System.out.println("An adjective that describes a useful tool that is carried on a person.");
-        }
-        else if (word.equals("AP Computer Science A")) {
-            System.out.println("A class that emphasizes on algorithms.");
-        }
-        else if (word.equals("AP Calculus BC")) {
-            System.out.println("The highest level of math you can reach in high school.");
-        }
-        else if (word.equals("Prospect High School")) {
-            System.out.println("A school in Saratoga, California that has colors gold and blue.");
+        System.out.print("Hint:");
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).getWord().equals(word)) {
+                System.out.println(words.get(i).getHint());
+            }
         }
     }
 
     public void giveFunFact(String word) {
         System.out.print("Fun fact: ");
-        if (word.equals("Catastrophe")) {
-            System.out.println("COVID-19 is Catastrophic!\n");
-        }
-        else if (word.equals("Bespectacled")) {
-            System.out.println("If you have glasses, you are bespectacled!\n");
-        }
-        else if (word.equals("AP Computer Science A")) {
-            System.out.println("AP Computer Science A is one of the easiest APs in all of College Board. If you like computers and are good at math, take it when you can!\n");
-        }
-        else if (word.equals("AP Calculus BC")) {
-            System.out.println("AP Calculus BC grants you college credits! Your Calculus AB test score is not counted ):\n");
-        }
-        else if (word.equals("Prospect High School")) {
-            System.out.println("PHS has a very diverse community!\n");
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).getWord().equals(word)) {
+                System.out.println(words.get(i).getFunFact());
+            }
         }
     }
 
