@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Hangman {
 
+    private ArrayList<Word> availableWords = new ArrayList<Word>();
     private ArrayList<User> users = new ArrayList<User>();
     private int tries = 0;
     private String line;
@@ -14,25 +15,31 @@ public class Hangman {
     private int counter = 0;
     Scanner scanner = new Scanner(System.in);
 
-    public void generateRandomWord() {
-        words.add(new Word("Catastrophe", "That's a lot of damage!", "COVID-19 is Catastrophic!"));
-        words.add(new Word("Bespectacled", "An adjective that describes a useful tool that is carried on a person.", "If you have glasses, you are bespectacled!"));
-        words.add(new Word("AP Computer Science A", "A class that emphasizes on algorithms", "AP Computer Science A is one of the easiest APs in all of College Board. If you like computers and are good at math, take it when you can!"));
-        words.add(new Word("AP Calculus BC", "The highest level of math you can reach in high school.", "The next level of math after AP Calculus BC is Multivariable Calculus!"));
-        words.add(new Word("Prospect High School", "A school in Saratoga, California that has colors gold and blue.", "PHS has a very diverse community!"));
+    public void generateAvailableWords() {
+        if (words.isEmpty()) {
+            System.out.println("There are no available words.");
+        } else {
+            for (int i = 0; i < words.size(); i++) {
+                availableWords.add(words.get(i));
+            } // Only call this if words is not empty
+        }
+    }
 
-        int index = (int) (Math.random()*words.size());
-        word = words.get(index).getWord();
+    public void generateRandomWord() {
+        int index = (int) (Math.random()*availableWords.size());
+        word = availableWords.get(index).getWord();
 
     }
 
     public void addWord() {
         System.out.println("Type in a word to add:");
-        String w = scanner.nextLine();
+        String w = scanner.next();
         System.out.println("Type in a simple description that does not give it away:");
-        String d = scanner.nextLine();
+        String d = scanner.next();
+        d = scanner.nextLine();
         System.out.println("Type in a fun fact about it:");
-        String f = scanner.nextLine();
+        String f = scanner.next();
+        f = scanner.nextLine();
 
         if (checkDuplicate(new Word(w, d, f))) {
             System.out.println("This word already exists.");
@@ -45,7 +52,7 @@ public class Hangman {
 
     public boolean checkDuplicate(Word w) {
         for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).getWord().equals(w)) {
+            if (words.get(i).equals(w)) {
                 return true;
             }
         }
@@ -71,7 +78,7 @@ public class Hangman {
 
     public void revealAnswer(String word) {
         System.out.println("The word was " + word + "!\n");
-    }
+    } 
 
     public void checkNumChars(String word) {
         line = "";
@@ -139,16 +146,40 @@ public class Hangman {
         System.out.println("Would you like to put your own words or use existing ones?");
         System.out.println("1. Your own words");
         System.out.println("2. Use existing ones");
+        System.out.println("3. Exit to main menu");
         int s = scanner.nextInt();
         switch(s) {
             case 1:
-                for (int i = 0; i < 4; i++) {
-                    
-                } 
-        }
+                System.out.println("How many words would you like to add?");
+                int num = scanner.nextInt();
+                for (int i = 0; i < num; i++) {
+                    addWord();
+                }
+                generateAvailableWords();
+                break;
+            
+            case 2:
+                addDefaultWords();
+                generateRandomWord();
+                break;
 
+            case 3:
+                showMenu();
+
+            default:
+                System.out.println("Invalid option. Please enter again.");
+                startGame();
+        }
         generateRandomWord();
         setGuess();
+    }
+
+    public void addDefaultWords() {
+        words.add(new Word("Catastrophe", "That's a lot of damage!", "COVID-19 is Catastrophic!"));
+        words.add(new Word("Bespectacled", "An adjective that describes a useful tool that is carried on a person.", "If you have glasses, you are bespectacled!"));
+        words.add(new Word("AP Computer Science A", "A class that emphasizes on algorithms", "AP Computer Science A is one of the easiest APs in all of College Board. If you like computers and are good at math, take it when you can!"));
+        words.add(new Word("AP Calculus BC", "The highest level of math you can reach in high school.", "The next level of math after AP Calculus BC is Multivariable Calculus!"));
+        words.add(new Word("Prospect High School", "A school in Saratoga, California that has colors gold and blue.", "PHS has a very diverse community!"));
     }
 
     public void giveHint(String word) {

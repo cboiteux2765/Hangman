@@ -34,6 +34,13 @@ public class Word {
         this.funFact = funFact;
     }
 
+    public boolean equals(Word another) {
+        if (word.equals(another.getWord())) {
+            return true;
+        }
+        return false;
+    }
+
     public String toString() {
         return "Word: " + word + " | Description: " + hint + " | Fun Fact:" + funFact;
     }
