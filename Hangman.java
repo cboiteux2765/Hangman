@@ -1,11 +1,15 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.awt.Color;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.*;
 
-public class Hangman {
-
+public class Hangman implements KeyListener {
     private ArrayList<Word> availableWords = new ArrayList<Word>();
     private ArrayList<User> users = new ArrayList<User>();
     private int tries = 0;
+    int x = 0, y = 0;
     private String line;
     private ArrayList<Word> words = new ArrayList<Word>();
     private ArrayList<Integer> indices = new ArrayList<Integer>();
@@ -160,6 +164,7 @@ public class Hangman {
             
             case 2:
                 addDefaultWords();
+                generateAvailableWords();
                 generateRandomWord();
                 break;
 
@@ -226,7 +231,7 @@ public class Hangman {
 
     public void aboutMe() {
         System.out.println("Hi! I am Clement Boiteux. I am currently a sophomore in high school. My most favorite subject is math, but I also enjoy any subject that uses a lot of math. I plan to pursue engineering, programming, or finance/economics in the future.");
-        System.out.println("Programming Experience: I took AP Computer Science A in my sophomore year of high school and joined Programming Club. I participated in two hackathons so far and programmed in HTML/CSS for both. I actively program in Java and HTML/CSS. I have a little bit of experience with JavaScript, Python, and C++ but don't actively program in these languages.\n");
+        System.out.println("Programming Experience: I took AP Computer Science A in my sophomore year of high school and joined Programming Club. I participated in two hackathons so far and programmed in HTML/CSS for both. I actively program in Java, C++, HTML/CSS, and JavaScript. I have a little bit of experience with Python but didn't learn it in depth.\n");
         redirect();
     }
 
@@ -253,10 +258,11 @@ public class Hangman {
     }
 
     public void showMenu() {
+
         System.out.println("Welcome to Clement's Hangman Game!");
         System.out.println("1. New Game              _____"); // In development
         System.out.println("2. Credits               |   |");
-        System.out.println("3. How to Play           o   |"); // In development
+        System.out.println("3. How to Play           o   |");
         System.out.println("4. About the developer  ---  |");
         System.out.println("5. High scores          | |  |");
         System.out.println("6. Exit");
@@ -308,9 +314,28 @@ public class Hangman {
         }
     }
 
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // TODO Auto-generated method stub
+
+        
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
 
     public static void main(String[] args) {
         Hangman h = new Hangman();
+        GUI g = new GUI();
         h.showMenu();
     }
 }
