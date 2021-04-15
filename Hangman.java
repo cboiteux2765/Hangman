@@ -1,22 +1,13 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.awt.Color;
-import java.awt.event.*;
-import javax.swing.*;
-import java.awt.*;
 
-public class Hangman implements KeyListener {
+public class Hangman {
     private ArrayList<Word> availableWords = new ArrayList<Word>();
     private ArrayList<User> users = new ArrayList<User>();
     private int tries = 0;
-    int x = 0, y = 0;
-    private String line;
     private ArrayList<Word> words = new ArrayList<Word>();
-    private ArrayList<Integer> indices = new ArrayList<Integer>();
-    private String word = "";
-    private boolean isAnswered = false; // In development
-    private String newWord = "";
-    private int counter = 0;
+    private String word = "", lastLine = "", line = "", newWord = "";
+    private boolean isAnswered = false, isFirstTry = true; // In development
     Scanner scanner = new Scanner(System.in);
 
     public void generateAvailableWords() {
@@ -85,7 +76,6 @@ public class Hangman implements KeyListener {
     } 
 
     public void checkNumChars(String word) {
-        line = "";
         for (int i = 0; i < word.length(); i++) {
             if (word.substring(i, i+1).equals(" ")) {
                 line += " ";
@@ -94,7 +84,6 @@ public class Hangman implements KeyListener {
                 line += "_";
             }
         }
-        System.out.println(line);
     }
 
     public void setGuess() {
@@ -103,7 +92,13 @@ public class Hangman implements KeyListener {
         System.out.println("2 - Gives a hint");
         System.out.println("3 - Reveals the answer");
         System.out.println("Guess a letter of the word: ");
-        checkNumChars(word);
+        if (isFirstTry) {
+            checkNumChars(word);
+            System.out.println(line);
+        } else {
+            System.out.println(newWord);
+        }
+        isFirstTry = false;
         String letter = scanner.next();
         if (letter.equalsIgnoreCase("1")) {
             System.out.println("Game Over!");
@@ -118,20 +113,18 @@ public class Hangman implements KeyListener {
             endMenu();
         }
         for (int index = 0; index < word.length(); index++) {
-            if (letter.equalsIgnoreCase(word.substring(index, index + 1))) {
-                System.out.print(index + " "); // Test
-                indices.add(counter, index);
-                counter++;
+            if (isFirstTry) {
+                if (letter.equalsIgnoreCase(word.substring(index, index + 1))) {
+                    newWord += word.charAt(index);
+                } else if (word.substring(index, index + 1).equals(" ")) {
+                    newWord += " ";
+                } else {
+                    newWord += "_";
+                }
+                lastLine = newWord;
+            } else {
+                
             }
-        }
-
-        for (int i = 0; i < indices.size(); i++) {
-            System.out.println("Index check");
-            System.out.println(indices.get(i));
-        }
-        
-        for (int i = 0; i < indices.size()-1; i++) {
-            newWord += word.substring(indices.get(i), indices.get(i+1));
         }
         System.out.println(newWord);
         setGuess();
@@ -140,6 +133,7 @@ public class Hangman implements KeyListener {
     public void resetHighScores() {
         for (int i = 0; i < users.size(); i++) {
             users.remove(i);
+            i--;
         }
         if (users.isEmpty()) {
             System.out.println("High scores list has been reset!");
@@ -314,28 +308,8 @@ public class Hangman implements KeyListener {
         }
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
-
-        
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
     public static void main(String[] args) {
         Hangman h = new Hangman();
-        GUI g = new GUI();
         h.showMenu();
     }
 }
