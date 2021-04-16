@@ -6,7 +6,7 @@ public class Hangman {
     private ArrayList<User> users = new ArrayList<User>();
     private int tries = 0;
     private ArrayList<Word> words = new ArrayList<Word>();
-    private String word = "", lastLine = "", line = "", newWord = "";
+    private String word = "", line = "", newWord = "", temp = "";
     private boolean isAnswered = false, isFirstTry = true; // In development
     Scanner scanner = new Scanner(System.in);
 
@@ -98,7 +98,6 @@ public class Hangman {
         } else {
             System.out.println(newWord);
         }
-        isFirstTry = false;
         String letter = scanner.next();
         if (letter.equalsIgnoreCase("1")) {
             System.out.println("Game Over!");
@@ -112,6 +111,7 @@ public class Hangman {
             giveFunFact(word);
             endMenu();
         }
+
         for (int index = 0; index < word.length(); index++) {
             if (isFirstTry) {
                 if (letter.equalsIgnoreCase(word.substring(index, index + 1))) {
@@ -121,13 +121,34 @@ public class Hangman {
                 } else {
                     newWord += "_";
                 }
-                lastLine = newWord;
+                temp = newWord;
             } else {
-                
+                newWord = "";
+                for (int i = 0; i < word.length(); i++) {
+                    if (letter.equalsIgnoreCase(word.substring(i, i+1))) {
+                        newWord += word.substring(i, i+1);
+                    } else {
+                        newWord += temp.substring(i, i+1);
+                    }
+                }
+                temp = newWord;
             }
         }
+        isFirstTry = false;
         System.out.println(newWord);
-        setGuess();
+        if (isWordSame()) {
+            giveFunFact(word);
+            endMenu();
+        } else {
+            setGuess();
+        }
+    }
+
+    public boolean isWordSame() {
+        if (newWord.equals(word)) {
+            isAnswered = true;
+        }
+        return isAnswered;
     }
 
     public void resetHighScores() {
@@ -154,12 +175,14 @@ public class Hangman {
                     addWord();
                 }
                 generateAvailableWords();
+                setGuess();
                 break;
             
             case 2:
                 addDefaultWords();
                 generateAvailableWords();
                 generateRandomWord();
+                setGuess();
                 break;
 
             case 3:
@@ -169,8 +192,7 @@ public class Hangman {
                 System.out.println("Invalid option. Please enter again.");
                 startGame();
         }
-        generateRandomWord();
-        setGuess();
+
     }
 
     public void addDefaultWords() {
@@ -260,24 +282,24 @@ public class Hangman {
         System.out.println("4. About the developer  ---  |");
         System.out.println("5. High scores          | |  |");
         System.out.println("6. Exit");
-        int choice = scanner.nextInt();
+        String choice = scanner.next();
 
-        if (choice == 1) {
+        if (choice.equals("1")) {
             startGame();
         }
-        else if (choice == 2) {
+        else if (choice.equals("2")) {
             showCredits();
         }
-        else if (choice == 3) {
+        else if (choice.equals("3")) {
             tutorial();
         }
-        else if (choice == 4) {
+        else if (choice.equals("4")) {
             aboutMe();
         }
-        else if (choice == 5) {
+        else if (choice.equals("5")) {
             printUserList();
         }
-        else if (choice == 6) {
+        else if (choice.equals("6")) {
             System.out.println("Have a nice day! Thank you for playing!");
         }
         else {
@@ -290,20 +312,16 @@ public class Hangman {
     public void endMenu() {
         System.out.println("Good job! You have discovered the secret word! Would you like to: ");
         System.out.println("1. Be featured on the high scores list");
-        System.out.println("2. Play again");
-        System.out.println("3. Quit game");
-        int choice = scanner.nextInt();
-        if (choice == 1) {
+        System.out.println("2. Quit game");
+        String choice = scanner.next();
+        if (choice.equals("1")) {
             System.out.println("First Name:");
             String name = scanner.next();
             System.out.println("Date completed ([month]/[day]/[year] format)");
             String date = scanner.next();
             users.add(new User(name, date, tries));
         }
-        else if (choice == 2) {
-            startGame();
-        }
-        else if (choice == 3) {
+        else if (choice.equals("2")) {
             System.out.println("Have a nice day! Thank you for playing!");
         }
     }
