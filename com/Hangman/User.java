@@ -11,19 +11,6 @@ public class User {
         this.tries = tries;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-
-    public String getDate() {
-        return this.date;
-    }
-
-    public int getTries() {
-        return this.tries;
-    }
-
     public String toString() {
         return "Name: " + this.name + ", Date Achieved: " + this.date + ", Tries: " + this.tries;
     }
