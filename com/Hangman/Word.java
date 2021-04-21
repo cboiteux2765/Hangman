@@ -1,3 +1,5 @@
+package com.Hangman;
+
 public class Word {
     
     private String word;
@@ -14,24 +16,12 @@ public class Word {
         return word;
     }
 
-    public void setWord(String word) {
-        this.word = word;
-    }
-
     public String getHint() {
         return hint;
     }
 
-    public void setHint(String hint) {
-        this.hint = hint;
-    }
-
     public String getFunFact() {
         return funFact;
-    }
-
-    public void setFunFact(String funFact) {
-        this.funFact = funFact;
     }
 
     public boolean equals(Word another) {
