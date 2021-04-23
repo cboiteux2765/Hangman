@@ -29,6 +29,10 @@ public class Hangman {
         attempts = word.length();
     }
 
+    public void endGame() {
+        System.out.println("Have a nice day! Thank you for playing!");
+    }
+
     public void addWord() {
         System.out.println("Type in a word to add:");
         String w = scanner.next();
@@ -151,6 +155,7 @@ public class Hangman {
             }
         }
         lost = true;
+        attempts = word.length();
         System.out.println("You lose!");
         revealAnswer(word);
         endMenu();
@@ -199,7 +204,7 @@ public class Hangman {
 
             case 3:
                 showMenu();
-
+                break;
             default:
                 System.out.println("Invalid option. Please enter again.");
                 startGame();
@@ -316,13 +321,29 @@ public class Hangman {
             printUserList();
         }
         else if (choice == 6) {
-            System.out.println("Have a nice day! Thank you for playing!");
+            endGame();
         }
         else {
             System.out.println("Invalid option. Enter again.");
             showMenu();
         }
     }
+
+    public void restartGame() {
+        availableWords = new ArrayList<Word>();
+        users = new ArrayList<User>();
+        word = "";
+        line = "";
+        newWord = "";
+        temp = "";
+        tries = 0;
+        attempts = 0;
+        words = new ArrayList<Word>();
+        isAnswered = false;
+        isFirstTry = true;
+        lost = false;
+    }
+
 
 
     public void endMenu() {
@@ -341,10 +362,12 @@ public class Hangman {
                 showMenu();
             }
             else if (choice == 2) {
-                System.out.println("Have a nice day! Thank you for playing!");
+                endGame();
             }
         } else {
-            redirect();
+            restartGame();
+            showMenu();
+            lost = false;
         }
 
     }
