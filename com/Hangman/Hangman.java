@@ -1,81 +1,52 @@
 package com.Hangman;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Hangman {
-    private ArrayList<Word> availableWords = new ArrayList<Word>();
-    private ArrayList<User> users = new ArrayList<User>();
+    private ArrayList<String> availableWords = new ArrayList();
     private String word = "", line = "", newWord = "", temp = "";
-    private int tries = 0, attempts = 0;
-    private ArrayList<Word> words = new ArrayList<Word>();
+    private int attempts = 0;
     private boolean isAnswered = false, isFirstTry = true;
     private boolean lost = false;
     Scanner scanner = new Scanner(System.in);
+    private BufferedReader br = null;
 
-    public void generateAvailableWords() {
-        if (words.isEmpty()) {
-            System.out.println("There are no available words.");
-        } else {
-            for (int i = 0; i < words.size(); i++) {
-                availableWords.add(words.get(i));
-            } // Only call this if words is not empty
+    public ArrayList<String> generateAvailableWords() {
+        try {
+            br = new BufferedReader(new FileReader("C:\\Users\\ezrab\\OneDrive\\Desktop\\GitHub\\Hangman\\com\\Hangman\\HangmanWords.txt"));
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                availableWords.add(line);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
+        return availableWords;
     }
 
     public void generateRandomWord() {
-        int index = (int) (Math.random()*availableWords.size());
-        word = availableWords.get(index).getWord();
-        attempts = word.length();
+        try {
+            int index = (int) (Math.random()*availableWords.size());
+            word = availableWords.get(index);
+            attempts = word.length() + 5;
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
     }
 
     public void endGame() {
         System.out.println("Have a nice day! Thank you for playing!");
-    }
-
-    public void addWord() {
-        System.out.println("Type in a word to add:");
-        String w = scanner.next();
-        System.out.println("Type in a simple description that does not give it away:");
-        String d = scanner.next();
-        d = scanner.nextLine();
-        System.out.println("Type in a fun fact about it:");
-        String f = scanner.next();
-        f = scanner.nextLine();
-
-        if (checkDuplicate(new Word(w, d, f))) {
-            System.out.println("This word already exists.");
-        }
-        else {
-            words.add(new Word(w, d, f));
-            System.out.println("Added to words list!");
-        }
-    }
-
-    public boolean checkDuplicate(Word w) {
-        for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).equals(w)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void removeWord() {
-        boolean isRemoved = false;
-        System.out.println("Type in the word you would like to remove:");
-        String w = scanner.nextLine();
-        for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).getWord().equals(w)) {
-                words.remove(i);
-                isRemoved = true;
-                System.out.println(w + " has been removed from the words list!");
-                i--;
-            }
-        }
-        if (!isRemoved) {
-            System.out.println(w + " was not in the words list.");
-        }
     }
 
     public void revealAnswer(String word) {
@@ -94,11 +65,10 @@ public class Hangman {
     }
 
     public void setGuess() {
-        while (attempts > 0) {
+        while (attempts > 0 && !isAnswered) {
             System.out.println("Commands:");
             System.out.println("1 - Quits the game");
-            System.out.println("2 - Gives a hint");
-            System.out.println("3 - Reveals the answer");
+            System.out.println("2 - Reveals the answer");
             System.out.println("Guess a letter of the word: ");
             if (isFirstTry) {
                 checkNumChars(word);
@@ -113,13 +83,7 @@ public class Hangman {
                 System.out.println("Game Over!");
             }
             if (letter.equalsIgnoreCase("2")) {
-                giveHint(word);
-                setGuess();
-            }
-            if (letter.equalsIgnoreCase("3")) {
                 revealAnswer(word);
-                giveFunFact(word);
-                endMenu();
             }
 
             for (int index = 0; index < word.length(); index++) {
@@ -148,17 +112,18 @@ public class Hangman {
             isFirstTry = false;
             System.out.println(newWord);
             if (isWordSame()) {
-                giveFunFact(word);
-                endMenu();
+                System.out.println("Congrats! You win!");
+                endGame();
+                isAnswered = true;
+            } else if (attempts == 0) {
+                lost = true;
+                System.out.println("You lose!");
+                revealAnswer(word);
             } else {
                 setGuess();
             }
         }
-        lost = true;
-        attempts = word.length();
-        System.out.println("You lose!");
-        revealAnswer(word);
-        endMenu();
+
     }
 
     public boolean isWordSame() {
@@ -168,107 +133,15 @@ public class Hangman {
         return isAnswered;
     }
 
-    public void resetHighScores() {
-        for (int i = 0; i < users.size(); i++) {
-            users.remove(i);
-            i--;
-        }
-        if (users.isEmpty()) {
-            System.out.println("High scores list has been reset!");
-        }
-    }
-
     public void startGame() {
-        System.out.println("Would you like to put your own words or use existing ones?");
-        System.out.println("1. Your own words");
-        System.out.println("2. Use existing ones");
-        System.out.println("3. Exit to main menu");
-        int s = scanner.nextInt();
-        switch(s) {
-            case 1:
-                System.out.println("How many words would you like to add?");
-                int num = scanner.nextInt();
-                for (int i = 0; i < num; i++) {
-                    addWord();
-                }
-                generateAvailableWords();
-                setGuess();
-                break;
-            
-            case 2:
-                addDefaultWords();
-                generateAvailableWords();
-                generateRandomWord();
-                setGuess();
-                break;
-
-            case 3:
-                showMenu();
-                break;
-            default:
-                System.out.println("Invalid option. Please enter again.");
-                startGame();
-        }
-
-    }
-
-    public void addDefaultWords() {
-        words.add(new Word("Catastrophe", "That's a lot of damage!", "COVID-19 is Catastrophic!"));
-        words.add(new Word("Bespectacled", "An adjective that describes a useful tool that is carried on a person.", "If you have glasses, you are bespectacled!"));
-        words.add(new Word("AP Computer Science A", "A class that emphasizes on algorithms", "AP Computer Science A is one of the easiest APs in all of College Board. If you like computers and are good at math, take it when you can!"));
-        words.add(new Word("AP Calculus BC", "The highest level of math you can reach in high school.", "The next level of math after AP Calculus BC is Multivariable Calculus!"));
-        words.add(new Word("Prospect High School", "A school in Saratoga, California that has colors gold and blue.", "PHS has a very diverse community!"));
-    }
-
-    public void giveHint(String word) {
-        System.out.print("Hint:");
-        for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).getWord().equals(word)) {
-                System.out.println(words.get(i).getHint());
-            }
-        }
-    }
-
-    public void giveFunFact(String word) {
-        System.out.print("Fun fact: ");
-        for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).getWord().equals(word)) {
-                System.out.println(words.get(i).getFunFact());
-            }
-        }
-    }
-
-    public void printUserList() {
-        System.out.println("=============");
-        System.out.println(" High Scores");
-        System.out.println("=============");
-        for (int i = 0; i < users.size(); i++) {
-            System.out.println(users.get(i));
-        }
-        System.out.println();
-        if (users.isEmpty()) {
-            System.out.println("Either no one has played the game yet or high scores have been cleared.\n");
-        }
-        System.out.println("Would you like to:");
-        System.out.println("1. Return to Main Menu");
-        System.out.println("2. Reset high scores");
-        int choice = scanner.nextInt();
-        if (choice == 1) {
-            showMenu();
-        }
-        else if (choice == 2) {
-            resetHighScores();
-            printUserList();
-        }
-        else {
-            System.out.println("Invalid option. Please enter again.");
-            printUserList();
-        }
+        generateAvailableWords();
+        generateRandomWord();
+        setGuess();
     }
 
     public void aboutMe() {
         System.out.println("Hi! I am Clement Boiteux. I am currently a sophomore in high school. My most favorite subject is math, but I also enjoy any subject that uses a lot of math. I plan to pursue engineering, programming, or finance/economics in the future.");
-        System.out.println("Programming Experience: I took AP Computer Science A in my sophomore year of high school and joined Programming Club. I participated in two hackathons so far and programmed in HTML/CSS for both. I actively program in Java, C++, HTML/CSS, and JavaScript. I have a little bit of experience with Python but didn't learn it in depth.\n");
+        System.out.println("Programming Experience: I took AP Computer Science A in my sophomore year of high school and joined Programming Club. I participated in two hackathons so far and programmed in HTML/CSS for both. I actively program in Java, C#, and JavaScript. I have a little bit of experience with C++ and Kotlin\n");
         redirect();
     }
 
@@ -295,14 +168,12 @@ public class Hangman {
     }
 
     public void showMenu() {
-
         System.out.println("Welcome to Clement's Hangman Game!");
-        System.out.println("1. New Game              _____"); // In development
+        System.out.println("1. New Game              _____");
         System.out.println("2. Credits               |   |");
         System.out.println("3. How to Play           o   |");
         System.out.println("4. About the developer  ---  |");
-        System.out.println("5. High scores          | |  |");
-        System.out.println("6. Exit");
+        System.out.println("5. Exit                 / \\  |");
         int choice = scanner.nextInt();
 
         if (choice == 1) {
@@ -318,9 +189,6 @@ public class Hangman {
             aboutMe();
         }
         else if (choice == 5) {
-            printUserList();
-        }
-        else if (choice == 6) {
             endGame();
         }
         else {
@@ -329,48 +197,6 @@ public class Hangman {
         }
     }
 
-    public void restartGame() {
-        availableWords = new ArrayList<Word>();
-        users = new ArrayList<User>();
-        word = "";
-        line = "";
-        newWord = "";
-        temp = "";
-        tries = 0;
-        attempts = 0;
-        words = new ArrayList<Word>();
-        isAnswered = false;
-        isFirstTry = true;
-        lost = false;
-    }
-
-
-
-    public void endMenu() {
-        if (!lost) {
-            System.out.println("Good job! You have discovered the secret word! Would you like to: ");
-            System.out.println("1. Be featured on the high scores list");
-            System.out.println("2. Quit game");
-            int choice = scanner.nextInt();
-            if (choice == 1) {
-                System.out.println("First Name:");
-                String name = scanner.next();
-                System.out.println("Date completed ([month]/[day]/[year] format)");
-                String date = scanner.next();
-                users.add(new User(name, date, tries));
-                System.out.println("Score added!");
-                showMenu();
-            }
-            else if (choice == 2) {
-                endGame();
-            }
-        } else {
-            restartGame();
-            showMenu();
-            lost = false;
-        }
-
-    }
 
     public static void main(String[] args) {
         Hangman h = new Hangman();
