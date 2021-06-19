@@ -19,16 +19,12 @@ public class Hangman {
             while ((line = br.readLine()) != null) {
                 availableWords.add(line);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NullPointerException e) {
+            } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
         }
