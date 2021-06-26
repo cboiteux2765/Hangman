@@ -14,7 +14,7 @@ public class Hangman {
 
     public ArrayList<String> generateAvailableWords() {
         try {
-            br = new BufferedReader(new FileReader("C:\\Users\\ezrab\\OneDrive\\Desktop\\GitHub\\Hangman\\com\\Hangman\\HangmanWords.txt"));
+            br = new BufferedReader(new FileReader("com/Hangman/HangmanWords.txt"));
             String line = "";
             while ((line = br.readLine()) != null) {
                 availableWords.add(line);
