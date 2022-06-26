@@ -1,2 +1,2 @@
 # Hangman
-Trying to make Hangman in Java. 
+Made Hangman in Java. 
